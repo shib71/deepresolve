@@ -1,0 +1,22 @@
+{
+  "name": "deepresolve",
+  "version": "0.0.1",
+  "description": "Simple module for recursively resolving a data structure containing promises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "q": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "/home/blair/Dropbox/Misc/nodejs/modules/deepresolve.git/"
+  },
+  "keywords": [
+    "promise",
+    "resolve"
+  ],
+  "author": "Blair McKenzie <shib71@gmail.com>",
+  "license": "MIT"
+}
