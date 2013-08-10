@@ -49,3 +49,22 @@ function resolveChild(val,v,i,toJSON){
 
     return result;
 }
+
+module.exports.hasPromise = hasPromise = function(val){
+  if (val && Q.isPromise(val))
+    return true;
+  else if (val && val.constructor === Array)
+    return val.map(function(v){ return Q.isPromise(v) || hasPromise(v); }).reduce(function(a,b){ return a || b; });
+  else if (val && val.constructor === Object){
+    var queue = [];
+
+    for (var k in val){
+      queue.push(Q.isPromise(val[k]) || hasPromise(val[k]));
+    }
+
+    return queue.reduce(function(a,b){ return a || b; });
+  }
+  else {
+    return false;
+  }
+}
