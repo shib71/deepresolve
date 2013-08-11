@@ -5,8 +5,12 @@ module.exports = deepResolve = function(val,toJSON){
 
     toJSON = toJSON || false;
 
-    if (val && val.toJSON && toJSON){
-        return Q(val.toJSON());
+    if (val && Q.isPromise(val)){
+        queue.push(val.then(function(v){
+          val = v;
+
+          return deepResolve(val);
+        }));
     }
     else if (val && val.constructor == Array){
         val.forEach(function(v,i){
@@ -34,17 +38,24 @@ function resolveChild(val,v,i,toJSON){
             else
                 val[i] = resolvedval;
 
-            if (val[i] && (val[i].constructor==Array || val[i].constructor==Object))
+            if (val[i] && (val[i].constructor==Array || val[i].constructor==Object)){
                 return deepResolve(val[i],toJSON);
+            }
             else
                 return true;
         });
     }
     else if (v && (v.constructor==Array || v.constructor==Object)){
+        if (v && v.toJSON && toJSON)
+            val[i] = v = v.toJSON();
+        
         result = deepResolve(v,toJSON);
     }
     else if (v && v.toJSON && toJSON){
-        val[i] = v.toJSON();
+        val[i] = v = v.toJSON();
+
+        if (v && (v.constructor==Array || v.constructor==Object))
+            result = deepResolve(v,toJSON);
     }
 
     return result;
