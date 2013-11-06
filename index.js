@@ -4,7 +4,10 @@ module.exports = deepResolve = function(val,toJSON){
     var queue = [];
 
     toJSON = toJSON || false;
-
+    
+    if (val && toJSON && val.toJSON)
+        val = val.toJSON();
+    
     if (val && Q.isPromise(val)){
         queue.push(val.then(function(v){
           val = v;
